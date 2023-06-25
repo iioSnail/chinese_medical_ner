@@ -18,6 +18,9 @@ class MedicalNerModel(pl.LightningModule):
 
         self.loss_fnt = nn.CrossEntropyLoss(ignore_index=0)
 
+        self.val_correct_num = 0
+        self.val_total_num = 0
+
     def forward(self, inputs):
         outputs = self.bert(**inputs).last_hidden_state
         outputs = self.head(outputs)
@@ -65,10 +68,18 @@ class MedicalNerModel(pl.LightningModule):
 
         self.log("val_acc", correct_num / total_num)
 
+        self.val_correct_num += correct_num
+        self.val_total_num += total_num
+
         return {
             'outputs': preds,
             'targets': targets,
         }
+
+    def on_validation_epoch_end(self) -> None:
+        print("Epoch",self.current_epoch, ". val_acc:", self.val_correct_num / self.val_total_num)
+        self.val_correct_num = 0
+        self.val_total_num = 0
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.args.lr)
