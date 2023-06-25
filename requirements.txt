@@ -1,0 +1,9 @@
+# python=3.8.5
+# torch==1.13.1
+torch
+# transformers==4.27.1
+transformers
+# lightning==2.0.1
+lightning
+lightning[extra]
+
