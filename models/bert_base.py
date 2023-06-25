@@ -73,7 +73,7 @@ class MedicalNerModel(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.args.lr)
 
-        t_total = len(self.args.train_dataloader) * self.args.epochs
+        t_total = len(self.args.train_loader) * self.args.epochs
 
         warmup_steps = int(self.args.warmup_proporation * t_total)
         scheduler = get_linear_schedule_with_warmup(
