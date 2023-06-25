@@ -3,7 +3,7 @@ import argparse
 import lightning.pytorch as pl
 import torch.optim
 from torch import nn
-from transformers import BertTokenizerFast, AutoModel, BertConfig
+from transformers import BertTokenizerFast, AutoModel, BertConfig, get_linear_schedule_with_warmup
 from transformers.models.bert.modeling_bert import BertOnlyMLMHead
 
 
@@ -71,4 +71,13 @@ class MedicalNerModel(pl.LightningModule):
         }
 
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.parameters(), lr=5e-5)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.args.lr)
+
+        t_total = len(self.args.train_dataloader) * self.args.epochs
+
+        warmup_steps = int(self.args.warmup_proporation * t_total)
+        scheduler = get_linear_schedule_with_warmup(
+            optimizer, num_warmup_steps=warmup_steps, num_training_steps=t_total
+        )
+
+        return [optimizer], [{"scheduler": scheduler, "interval": "step"}]

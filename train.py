@@ -21,6 +21,8 @@ class Train(object):
 
     def train(self):
         train_loader, val_loader = create_dataloader(self.args)
+        self.args.train_loader = train_loader
+        self.args.val_loader = val_loader
 
         # Limit the datasize for debug.
         limit_train_batches = None
@@ -59,6 +61,7 @@ class Train(object):
 
     def parse_args(self):
         parser = argparse.ArgumentParser()
+        parser.add_argument('--lr', type=float, default=5e-5, help='Learning Rate.')
         parser.add_argument('--device', type=str, default='auto',
                             help='The device for training. auto, cpu or cuda')
         parser.add_argument('--valid-ratio', type=float, default=0.1,
