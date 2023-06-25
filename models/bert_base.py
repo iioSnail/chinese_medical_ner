@@ -75,7 +75,7 @@ class MedicalNerModel(pl.LightningModule):
 
         t_total = len(self.args.train_loader) * self.args.epochs
 
-        warmup_steps = int(self.args.warmup_proporation * t_total)
+        warmup_steps = int(0.1 * t_total)
         scheduler = get_linear_schedule_with_warmup(
             optimizer, num_warmup_steps=warmup_steps, num_training_steps=t_total
         )
