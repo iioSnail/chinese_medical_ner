@@ -50,7 +50,7 @@ class Train(object):
         )
 
         last_ckpt_path = self.args.work_dir / 'last.ckpt'
-        if not os.path.exists(last_ckpt_path):
+        if not self.args.resume or not os.path.exists(last_ckpt_path):
             last_ckpt_path = None
 
         trainer.fit(self.model,
