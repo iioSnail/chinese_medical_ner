@@ -7,7 +7,7 @@ import torch
 import lightning.pytorch as pl
 from lightning.pytorch.callbacks import ModelCheckpoint
 
-from models.bert_base import MedicalNerModel
+from models.base import MedicalNerModel
 from utils.datasets import create_dataloader
 
 
