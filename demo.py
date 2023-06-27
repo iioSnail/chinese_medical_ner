@@ -3,7 +3,7 @@ from transformers import AutoModelForTokenClassification, BertTokenizerFast
 from models.base import MedicalNerModel
 
 if __name__ == '__main__':
-    tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese')
+    tokenizer = BertTokenizerFast.from_pretrained('iioSnail/bert-base-chinese-medical-ner')
     model = AutoModelForTokenClassification.from_pretrained("iioSnail/bert-base-chinese-medical-ner")
 
     sentences = ["瘦脸针、水光针和玻尿酸详解！", "半月板钙化的病因有哪些？"]
