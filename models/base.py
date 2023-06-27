@@ -2,8 +2,6 @@ import argparse
 
 import lightning.pytorch as pl
 import torch.optim
-import transformers
-from torch import nn
 from transformers import BertTokenizerFast, get_linear_schedule_with_warmup, \
     AutoModelForTokenClassification
 
@@ -78,3 +76,41 @@ class MedicalNerModel(pl.LightningModule):
         )
 
         return [optimizer], [{"scheduler": scheduler, "interval": "step"}]
+
+    @staticmethod
+    def format_outputs(sentences, outputs):
+        preds = []
+        for i, pred_indices in enumerate(outputs):
+            words = []
+            start_idx = -1
+            end_idx = -1
+            flag = False
+            for idx, pred_idx in enumerate(pred_indices):
+                if pred_idx == 1:
+                    start_idx = idx
+                    flag = True
+                    continue
+
+                if flag and pred_idx != 2 and pred_idx != 3:
+                    # 出现了不应该出现的index
+                    print("Abnormal prediction results for sentence", sentences[i])
+                    start_idx = -1
+                    end_idx = -1
+                    continue
+
+                if pred_idx == 3:
+                    end_idx = idx
+
+                    words.append({
+                        "start": start_idx,
+                        "end": end_idx + 1,
+                        "word": sentences[i][start_idx:end_idx+1]
+                    })
+                    start_idx = -1
+                    end_idx = -1
+                    flag = False
+                    continue
+
+            preds.append(words)
+
+        return preds
