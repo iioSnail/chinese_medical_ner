@@ -1,6 +1,5 @@
 python train.py \
-       --lr 5e-5 \
-       --batch-size 32 \
+       --lr 1e-5 \
+       --batch-size 96 \
        --workers 8 \
-       --epochs 10 \
-       --limit-batches 300
+       --epochs 50
